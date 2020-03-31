@@ -13,25 +13,52 @@ class EquipmentCombination:
         leg_piece,
         charm
     ):
-        self.equipment = {
-            BodyPart.HEAD: head_piece,
-            BodyPart.BODY: body_piece,
-            BodyPart.ARMS: arm_piece,
-            BodyPart.WAIST: waist_piece,
-            BodyPart.LEGS: leg_piece,
-            BodyPart.CHARM: charm,
+        self._equipment = [
+            head_piece,
+            body_piece,
+            arm_piece,
+            waist_piece,
+            leg_piece,
+            charm,
+        ]
+
+    @property
+    def equipment(self):
+        return {
+                k: v for (k,v) in zip([BodyPart.HEAD,
+                                       BodyPart.BODY,
+                                       BodyPart.ARMS,
+                                       BodyPart.WAIST,
+                                       BodyPart.LEGS,
+                                       BodyPart.CHARM],
+                                      self._equipment)
         }
-        self._armour_pieces = [
+
+    @property
+    def _armour_pieces(self):
+        return [
             x for x in self.equipment.values() if not isinstance(x, Charm)
         ]
-        self.charm = charm
-        self.total_defence = sum([x.defence for x in self._armour_pieces])
-        self.total_decoration_slots_by_level = _total_decoration_slots_by_level(
+
+    @property
+    def charm(self):
+        return self.equipment[BodyPart.CHARM]
+    
+    @property
+    def total_defence(self):
+        return sum([x.defence for x in self._armour_pieces])
+
+    @property
+    def total_decoration_slots_by_level(self):
+        return _total_decoration_slots_by_level(
             self._armour_pieces
         )
-        self.total_skill_levels = _total_skill_levels(
+
+    @property
+    def total_skill_levels(self):
+        return _total_skill_levels(
             self._armour_pieces,
-            charm
+            self.charm
         )
 
 
